@@ -1,433 +1,94 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b1020" />
-  <title>Arcade — Browser Games</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0b1020;
-      --panel: #151d31;
-      --panel-light: #202b43;
-      --line: #33415d;
-      --text: #f4f7ff;
-      --muted: #aab6ce;
-      --green: #45e0a1;
-      --blue: #70a5ff;
-      --gold: #ffd166;
-    }
-    * { box-sizing: border-box; }
-    body {
-      min-height: 100vh;
-      margin: 0;
-      padding: 28px 16px 48px;
-      color: var(--text);
-      background: radial-gradient(ellipse at top, #172746 0%, var(--bg) 62%);
-      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-    }
-    .app { width: min(100%, 1020px); margin: 0 auto; }
-    header { text-align: center; margin: 4px 0 24px; }
-    h1 { margin: 0; font-size: clamp(2.2rem, 6vw, 4rem); letter-spacing: -.04em; }
-    h1 span { color: var(--green); }
-    .subtitle { color: var(--muted); margin: 8px 0 0; }
-    .section-label { margin: 0 0 10px; color: var(--muted); font-size: .88rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    .game-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 9px; margin-bottom: 16px; }
-    button { font: inherit; }
-    .game-choice, .control-button {
-      border: 1px solid var(--line); border-radius: 12px; color: var(--text);
-      background: var(--panel-light); padding: 11px 12px; cursor: pointer;
-      transition: border-color .15s, transform .15s, background .15s;
-    }
-    .game-choice:hover, .control-button:hover { border-color: var(--green); transform: translateY(-1px); }
-    .game-choice.active { border-color: var(--green); background: #193c3b; box-shadow: inset 0 0 0 1px #45e05533; }
-    .panel { padding: clamp(12px, 3vw, 22px); border: 1px solid var(--line); border-radius: 20px; background: #151d31ed; box-shadow: 0 20px 55px #0005; }
-    .hud { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-    .game-title { font-size: 1.1rem; font-weight: 750; }
-    .score { color: var(--gold); font-weight: 750; }
-    canvas { display: block; width: min(100%, 560px); aspect-ratio: 1; height: auto; margin: 0 auto; border: 1px solid var(--line); border-radius: 14px; background: #080e1a; touch-action: none; }
-    .actions { display: flex; justify-content: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-    .control-button { min-width: 100px; }
-    .control-button.primary { background: var(--green); border-color: var(--green); color: #052419; font-weight: 800; }
-    .status { min-height: 24px; margin: 13px 0 0; color: var(--muted); text-align: center; }
-    .help { margin: 7px 0 0; color: #8190aa; font-size: .88rem; text-align: center; }
-    .mobile-controls { display: none; grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(2, 44px); justify-content: center; gap: 6px; margin-top: 14px; }
-    .mobile-controls button { border: 1px solid var(--line); border-radius: 10px; background: var(--panel-light); color: white; font-size: 1.15rem; touch-action: manipulation; }
-    .mobile-controls [data-dir="up"] { grid-column: 2; }
-    .mobile-controls [data-dir="left"] { grid-column: 1; grid-row: 2; }
-    .mobile-controls [data-dir="down"] { grid-column: 2; grid-row: 2; }
-    .mobile-controls [data-dir="right"] { grid-column: 3; grid-row: 2; }
-    footer { margin-top: 16px; text-align: center; color: #8190aa; font-size: .82rem; }
-    @media (max-width: 560px) { body { padding: 20px 10px 32px; } .game-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mobile-controls { display: grid; } }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>Browser Arcade</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#151d31;--light:#202b43;--line:#33415d;--text:#f4f7ff;--muted:#aab6ce;--green:#45e0a1;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px 14px 40px;background:radial-gradient(ellipse at top,#172746,var(--bg) 65%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}.app{width:min(100%,1000px);margin:auto}header{text-align:center;margin:5px 0 22px}h1{font-size:clamp(2.2rem,6vw,4rem);margin:0;letter-spacing:-.04em}h1 span{color:var(--green)}header p{color:var(--muted);margin:8px 0}.label{margin:0 0 9px;color:var(--muted);font-size:.84rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-bottom:15px}.games button,.control{font:inherit;color:var(--text);background:var(--light);border:1px solid var(--line);border-radius:11px;padding:10px 12px;cursor:pointer}.games button:hover,.control:hover{border-color:var(--green)}.games button.active{background:#193c3b;border-color:var(--green)}.panel{padding:clamp(12px,3vw,20px);background:#151d31ed;border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 55px #0005}.hud{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}.title{font-weight:750;font-size:1.1rem}.score{color:var(--gold);font-weight:750}canvas{display:block;width:min(100%,640px);height:auto;aspect-ratio:4/3;margin:auto;background:#080e1a;border:1px solid var(--line);border-radius:13px;touch-action:none}.actions{display:flex;justify-content:center;gap:10px;margin-top:13px}.control{min-width:105px}.control.primary{background:var(--green);border-color:var(--green);color:#052419;font-weight:800}.status,.help{text-align:center}.status{min-height:24px;color:var(--muted);margin:12px 0 4px}.help{font-size:.88rem;color:#8190aa;margin:5px 0 0}.touchpad{display:none;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,42px);justify-content:center;gap:5px;margin:12px auto 0}.touchpad button{color:white;background:var(--light);border:1px solid var(--line);border-radius:9px;touch-action:manipulation}.touchpad [data-key=up]{grid-column:2}.touchpad [data-key=left]{grid-column:1;grid-row:2}.touchpad [data-key=down]{grid-column:2;grid-row:2}.touchpad [data-key=right]{grid-column:3;grid-row:2}footer{text-align:center;color:#8190aa;font-size:.82rem;margin:14px 0}@media(max-width:560px){body{padding:18px 10px 30px}.games{grid-template-columns:repeat(2,minmax(0,1fr))}.touchpad{display:grid}}
+</style>
 </head>
 <body>
-  <main class="app">
-    <header>
-      <h1>Browser <span>Arcade</span></h1>
-      <p class="subtitle">Six quick games, built right into this page. No downloads or game embeds.</p>
-    </header>
-
-    <p class="section-label">Choose a game</p>
-    <nav class="game-list" aria-label="Choose a game">
-      <button class="game-choice active" data-game="snake">🐍 Snake</button>
-      <button class="game-choice" data-game="memory">🧠 Memory Match</button>
-      <button class="game-choice" data-game="pong">🏓 Pong</button>
-      <button class="game-choice" data-game="breakout">🧱 Breakout</button>
-      <button class="game-choice" data-game="dodge">☄️ Meteor Dodge</button>
-      <button class="game-choice" data-game="clicker">🎯 Target Rush</button>
-    </nav>
-
-    <section class="panel" aria-label="Game">
-      <div class="hud">
-        <div class="game-title">Now playing: <span id="gameName">Snake</span></div>
-        <div class="score">Score: <span id="score">0</span></div>
-      </div>
-      <canvas id="gameCanvas" width="480" height="480" aria-label="Game board"></canvas>
-      <div class="mobile-controls" id="mobileControls" aria-label="Touch direction controls">
-        <button data-dir="up" aria-label="Move up">▲</button>
-        <button data-dir="left" aria-label="Move left">◀</button>
-        <button data-dir="down" aria-label="Move down">▼</button>
-        <button data-dir="right" aria-label="Move right">▶</button>
-      </div>
-      <div class="actions">
-        <button class="control-button primary" id="startBtn">Start game</button>
-        <button class="control-button" id="pauseBtn">Pause</button>
-      </div>
-      <p class="status" id="statusText" aria-live="polite">Use arrow keys or WASD, then press Start.</p>
-      <p class="help" id="helpText"></p>
-    </section>
-    <footer>Made with plain JavaScript and Canvas. Games run locally in your browser.</footer>
-  </main>
-
-  <script>
-    (() => {
-      'use strict';
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
-      const scoreEl = document.getElementById('score');
-      const gameNameEl = document.getElementById('gameName');
-      const statusEl = document.getElementById('statusText');
-      const helpEl = document.getElementById('helpText');
-      const startBtn = document.getElementById('startBtn');
-      const pauseBtn = document.getElementById('pauseBtn');
-      const gameButtons = [...document.querySelectorAll('[data-game]')];
-      const W = canvas.width, H = canvas.height;
-      const names = { snake: 'Snake', memory: 'Memory Match', pong: 'Pong', breakout: 'Breakout', dodge: 'Meteor Dodge', clicker: 'Target Rush' };
-      const help = {
-        snake: 'Move: arrow keys / WASD or touch arrows. Don’t hit the walls or yourself.',
-        memory: 'Tap or click two cards to find matching pairs. Match all six pairs.',
-        pong: 'Move: W/S or ↑/↓. On touch screens, drag on the board to move your paddle.',
-        breakout: 'Move: ←/→ or A/D. On touch screens, drag to move the paddle.',
-        dodge: 'Move: ←/→ or A/D. Dodge meteors; collect green stars for bonus points.',
-        clicker: 'Click or tap the target as many times as you can before time runs out.'
-      };
-      const state = { game: 'snake', started: false, paused: false, score: 0, lastTime: 0, accumulator: 0, data: null };
-      const rand = (min, max) => Math.random() * (max - min) + min;
-      const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-      const setScore = value => { state.score = value; scoreEl.textContent = Math.floor(value); };
-      const finish = message => { state.started = false; state.paused = false; pauseBtn.textContent = 'Pause'; statusEl.textContent = message; };
-
-      function freshData(game) {
-        if (game === 'snake') return { cells: 20, snake: [{x: 9, y: 10}, {x: 8, y: 10}, {x: 7, y: 10}], dir: {x: 1, y: 0}, next: {x: 1, y: 0}, food: {x: 14, y: 10}, elapsed: 0 };
-        if (game === 'memory') {
-          const faces = ['🍒','🍋','🍉','🍇','🍊','🍓'];
-          const deck = [...faces, ...faces].sort(() => Math.random() - .5);
-          return { cards: deck.map((emoji, id) => ({emoji, id, matched: false})), flipped: [], mismatchAt: 0, moves: 0 };
-        }
-        if (game === 'pong') return { playerY: 200, aiY: 200, ball: {x: 240, y: 240, vx: 230, vy: 150}, player: 0, ai: 0, keys: {} };
-        if (game === 'breakout') {
-          const bricks = [];
-          for (let row = 0; row < 5; row++) for (let col = 0; col < 8; col++) bricks.push({x: 32 + col * 52, y: 54 + row * 26, w: 44, h: 16, alive: true, color: ['#ff6b6b','#ff9f43','#ffd166','#45e0a1','#70a5ff'][row]});
-          return { paddleX: 205, ball: {x: 240, y: 390, vx: 190, vy: -220}, bricks, lives: 3, keys: {} };
-        }
-        if (game === 'dodge') return { playerX: 240, objects: [], spawn: 0, elapsed: 0, keys: {} };
-        return { target: {x: 240, y: 240, r: 27}, time: 20, hits: 0 };
-      }
-
-      function setGame(game) {
-        state.game = game;
-        state.started = false; state.paused = false; state.accumulator = 0;
-        state.data = freshData(game); setScore(0);
-        gameButtons.forEach(button => button.classList.toggle('active', button.dataset.game === game));
-        gameNameEl.textContent = names[game];
-        helpEl.textContent = help[game];
-        statusEl.textContent = `Ready to play ${names[game]}. Press Start game.`;
-        startBtn.textContent = 'Start game'; pauseBtn.textContent = 'Pause';
-        draw();
-      }
-
-      function startGame() {
-        if (state.game === 'snake' || state.game === 'memory' || state.game === 'pong' || state.game === 'breakout' || state.game === 'dodge' || state.game === 'clicker') {
-          state.data = freshData(state.game); setScore(0);
-        }
-        state.started = true; state.paused = false; state.lastTime = performance.now(); state.accumulator = 0;
-        startBtn.textContent = 'Restart'; pauseBtn.textContent = 'Pause';
-        const messages = { snake: 'Go! Collect the glowing food.', memory: 'Find all six matching pairs.', pong: 'First to 5 points wins!', breakout: 'Clear the bricks. You have 3 lives.', dodge: 'Stay alive and collect green stars!', clicker: 'Go! Tap the target!' };
-        statusEl.textContent = messages[state.game]; draw();
-      }
-
-      function togglePause() {
-        if (!state.started) return;
-        state.paused = !state.paused;
-        pauseBtn.textContent = state.paused ? 'Resume' : 'Pause';
-        statusEl.textContent = state.paused ? 'Paused. Press Resume to continue.' : 'Game resumed!';
-        state.lastTime = performance.now();
-      }
-
-      function spawnFood() {
-        const s = state.data;
-        let p;
-        do { p = {x: Math.floor(Math.random() * s.cells), y: Math.floor(Math.random() * s.cells)}; }
-        while (s.snake.some(part => part.x === p.x && part.y === p.y));
-        s.food = p;
-      }
-
-      function updateSnake(dt) {
-        const s = state.data; s.elapsed += dt;
-        if (s.elapsed < 0.115) return;
-        s.elapsed = 0; s.dir = s.next;
-        const head = {x: s.snake[0].x + s.dir.x, y: s.snake[0].y + s.dir.y};
-        const eating = head.x === s.food.x && head.y === s.food.y;
-        const body = eating ? s.snake : s.snake.slice(0, -1);
-        if (head.x < 0 || head.x >= s.cells || head.y < 0 || head.y >= s.cells || body.some(p => p.x === head.x && p.y === head.y)) {
-          finish(`Game over! Final score: ${state.score}. Press Restart to try again.`); return;
-        }
-        s.snake.unshift(head);
-        if (eating) { setScore(state.score + 10); spawnFood(); } else s.snake.pop();
-      }
-
-      function updateMemory() {
-        const s = state.data;
-        if (s.mismatchAt && performance.now() >= s.mismatchAt) { s.flipped = []; s.mismatchAt = 0; }
-      }
-
-      function updatePong(dt) {
-        const s = state.data;
-        if (s.keys.up) s.playerY -= 330 * dt;
-        if (s.keys.down) s.playerY += 330 * dt;
-        s.playerY = clamp(s.playerY, 20, H - 100);
-        s.aiY += (s.ball.y - 50 - s.aiY) * Math.min(1, dt * 3.1);
-        s.aiY = clamp(s.aiY, 20, H - 100);
-        const b = s.ball; b.x += b.vx * dt; b.y += b.vy * dt;
-        if (b.y < 10 || b.y > H - 10) b.vy *= -1;
-        if (b.vx < 0 && b.x - 10 <= 30 && b.y >= s.playerY && b.y <= s.playerY + 100) { b.x = 40; b.vx = Math.abs(b.vx) * 1.04; b.vy += (b.y - (s.playerY + 50)) * 2.4; }
-        if (b.vx > 0 && b.x + 10 >= W - 30 && b.y >= s.aiY && b.y <= s.aiY + 100) { b.x = W - 40; b.vx = -Math.abs(b.vx) * 1.02; b.vy += (b.y - (s.aiY + 50)) * 1.8; }
-        if (b.x < -12) { s.ai++; b.x = W / 2; b.y = H / 2; b.vx = 220; b.vy = rand(-170, 170); }
-        if (b.x > W + 12) { s.player++; setScore(s.player); b.x = W / 2; b.y = H / 2; b.vx = -220; b.vy = rand(-170, 170); }
-        if (s.player >= 5 || s.ai >= 5) finish(s.player >= 5 ? 'You win! Press Restart for another match.' : 'Computer wins this round. Press Restart to play again.');
-      }
-
-      function updateBreakout(dt) {
-        const s = state.data;
-        if (s.keys.left) s.paddleX -= 370 * dt;
-        if (s.keys.right) s.paddleX += 370 * dt;
-        s.paddleX = clamp(s.paddleX, 10, W - 100);
-        const b = s.ball; b.x += b.vx * dt; b.y += b.vy * dt;
-        if (b.x < 9 || b.x > W - 9) b.vx *= -1;
-        if (b.y < 9) b.vy = Math.abs(b.vy);
-        if (b.vy > 0 && b.y + 9 >= 420 && b.y < 440 && b.x >= s.paddleX && b.x <= s.paddleX + 90) {
-          b.y = 410; b.vy = -Math.abs(b.vy); b.vx += ((b.x - (s.paddleX + 45)) / 45) * 100;
-        }
-        for (const brick of s.bricks) {
-          if (brick.alive && b.x + 8 > brick.x && b.x - 8 < brick.x + brick.w && b.y + 8 > brick.y && b.y - 8 < brick.y + brick.h) {
-            brick.alive = false; b.vy *= -1; setScore(state.score + 10); break;
-          }
-        }
-        if (s.bricks.every(brick => !brick.alive)) { finish(`You cleared the wall! Score: ${state.score}.`); return; }
-        if (b.y > H) {
-          s.lives--;
-          if (s.lives <= 0) { finish(`Out of lives! Final score: ${state.score}.`); return; }
-          b.x = 240; b.y = 390; b.vx = rand(-160, 160); b.vy = -220;
-          statusEl.textContent = `${s.lives} lives left. Keep going!`;
-        }
-      }
-
-      function updateDodge(dt) {
-        const s = state.data; s.elapsed += dt;
-        if (s.keys.left) s.playerX -= 300 * dt;
-        if (s.keys.right) s.playerX += 300 * dt;
-        s.playerX = clamp(s.playerX, 18, W - 18);
-        s.spawn -= dt;
-        if (s.spawn <= 0) {
-          const star = Math.random() < .18;
-          s.objects.push({x: rand(20, W - 20), y: -15, r: star ? 10 : rand(12, 21), speed: rand(145, 260) + s.elapsed * 2, star});
-          s.spawn = Math.max(.22, .72 - s.elapsed * .009);
-        }
-        for (let i = s.objects.length - 1; i >= 0; i--) {
-          const o = s.objects[i]; o.y += o.speed * dt;
-          const distance = Math.hypot(o.x - s.playerX, o.y - 420);
-          if (distance < o.r + 15) {
-            if (o.star) { setScore(state.score + 25); s.objects.splice(i, 1); continue; }
-            finish(`Meteor hit! Final score: ${state.score}.`); return;
-          }
-          if (o.y > H + 25) s.objects.splice(i, 1);
-        }
-        if (s.elapsed >= 30) finish(`You survived! Final score: ${state.score}.`);
-        else setScore(Math.floor(s.elapsed * 2));
-      }
-
-      function updateClicker(dt) {
-        const s = state.data; s.time -= dt;
-        if (s.time <= 0) { s.time = 0; finish(`Time's up! You scored ${s.hits} hits.`); }
-      }
-
-      function update(dt) {
-        if (!state.started || state.paused) return;
-        if (state.game === 'snake') updateSnake(dt);
-        if (state.game === 'memory') updateMemory();
-        if (state.game === 'pong') updatePong(dt);
-        if (state.game === 'breakout') updateBreakout(dt);
-        if (state.game === 'dodge') updateDodge(dt);
-        if (state.game === 'clicker') updateClicker(dt);
-      }
-
-      function background() {
-        ctx.fillStyle = '#080e1a'; ctx.fillRect(0, 0, W, H);
-      }
-      function drawSnake() {
-        const s = state.data, size = W / s.cells; background();
-        ctx.strokeStyle = '#18243a'; ctx.lineWidth = 1;
-        for (let i = 0; i <= s.cells; i++) { ctx.beginPath(); ctx.moveTo(i * size, 0); ctx.lineTo(i * size, H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, i * size); ctx.lineTo(W, i * size); ctx.stroke(); }
-        ctx.fillStyle = '#ff6b6b'; ctx.beginPath(); ctx.arc((s.food.x + .5) * size, (s.food.y + .5) * size, size * .32, 0, Math.PI * 2); ctx.fill();
-        s.snake.forEach((p, i) => { ctx.fillStyle = i ? '#10b981' : '#a7f3d0'; ctx.beginPath(); ctx.roundRect(p.x * size + 2, p.y * size + 2, size - 4, size - 4, 6); ctx.fill(); });
-      }
-      function drawMemory() {
-        const s = state.data; background();
-        const size = 94, gap = 16, left = 40, top = 40;
-        s.cards.forEach((card, i) => {
-          const x = left + (i % 4) * (size + gap), y = top + Math.floor(i / 4) * (size + gap);
-          const face = card.matched || s.flipped.includes(i);
-          ctx.fillStyle = card.matched ? '#164638' : face ? '#202b43' : '#142039';
-          ctx.strokeStyle = card.matched ? '#45e0a1' : '#40516f'; ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.roundRect(x, y, size, size, 12); ctx.fill(); ctx.stroke();
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '42px system-ui'; ctx.fillStyle = '#fff';
-          ctx.fillText(face ? card.emoji : '?', x + size / 2, y + size / 2);
-        });
-        ctx.textAlign = 'left';
-        if (!state.started) { ctx.fillStyle = '#aab6ce'; ctx.font = '15px system-ui'; ctx.fillText('Press Start game, then select cards', 112, 450); }
-      }
-      function drawPong() {
-        const s = state.data; background(); ctx.setLineDash([9, 12]); ctx.strokeStyle = '#35435d'; ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = '#70a5ff'; ctx.fillRect(18, s.playerY, 12, 100); ctx.fillStyle = '#ff7185'; ctx.fillRect(W - 30, s.aiY, 12, 100);
-        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(s.ball.x, s.ball.y, 10, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 34px system-ui'; ctx.textAlign = 'center'; ctx.fillText(`${s.player}     ${s.ai}`, W/2, 42);
-      }
-      function drawBreakout() {
-        const s = state.data; background();
-        s.bricks.forEach(brick => { if (!brick.alive) return; ctx.fillStyle = brick.color; ctx.beginPath(); ctx.roundRect(brick.x, brick.y, brick.w, brick.h, 4); ctx.fill(); });
-        ctx.fillStyle = '#70a5ff'; ctx.beginPath(); ctx.roundRect(s.paddleX, 420, 90, 13, 7); ctx.fill();
-        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(s.ball.x, s.ball.y, 9, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#aab6ce'; ctx.font = '16px system-ui'; ctx.textAlign = 'left'; ctx.fillText(`Lives: ${s.lives}`, 16, 462);
-      }
-      function drawDodge() {
-        const s = state.data; background();
-        ctx.fillStyle = '#70a5ff'; ctx.beginPath(); ctx.moveTo(s.playerX, 396); ctx.lineTo(s.playerX - 18, 438); ctx.lineTo(s.playerX + 18, 438); ctx.closePath(); ctx.fill();
-        s.objects.forEach(o => { ctx.fillStyle = o.star ? '#45e0a1' : '#ff806b'; ctx.beginPath(); if (o.star) { ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); } else { ctx.moveTo(o.x, o.y - o.r); ctx.lineTo(o.x + o.r, o.y + o.r); ctx.lineTo(o.x - o.r, o.y + o.r); ctx.closePath(); } ctx.fill(); });
-        ctx.fillStyle = '#aab6ce'; ctx.font = '16px system-ui'; ctx.textAlign = 'left'; ctx.fillText(`Survive: ${Math.max(0, 30 - s.elapsed).toFixed(1)}s`, 16, 28);
-      }
-      function drawClicker() {
-        const s = state.data; background();
-        ctx.fillStyle = '#aab6ce'; ctx.font = 'bold 25px system-ui'; ctx.textAlign = 'center'; ctx.fillText(`Time: ${s.time.toFixed(1)}s`, W/2, 44);
-        ctx.fillStyle = '#45e0a1'; ctx.beginPath(); ctx.arc(s.target.x, s.target.y, s.target.r, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#c9ffe8'; ctx.beginPath(); ctx.arc(s.target.x, s.target.y, s.target.r * .56, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#45e0a1'; ctx.beginPath(); ctx.arc(s.target.x, s.target.y, s.target.r * .22, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#aab6ce'; ctx.font = '16px system-ui'; ctx.fillText(`Hits: ${s.hits}`, W/2, H - 24);
-      }
-      function draw() {
-        if (!state.data) return;
-        if (state.game === 'snake') drawSnake();
-        if (state.game === 'memory') drawMemory();
-        if (state.game === 'pong') drawPong();
-        if (state.game === 'breakout') drawBreakout();
-        if (state.game === 'dodge') drawDodge();
-        if (state.game === 'clicker') drawClicker();
-      }
-
-      function frame(now) {
-        const dt = Math.min((now - state.lastTime) / 1000 || 0, .05);
-        state.lastTime = now;
-        update(dt); draw();
-        if (state.game === 'clicker' && state.started) statusEl.textContent = `Keep going! ${state.data.time.toFixed(1)} seconds left.`;
-        requestAnimationFrame(frame);
-      }
-      function direction(x, y) {
-        if (state.game !== 'snake' || !state.data) return;
-        const d = state.data.dir;
-        if (x !== -d.x || y !== -d.y) state.data.next = {x, y};
-      }
-      function point(event) {
-        const rect = canvas.getBoundingClientRect();
-        return {x: (event.clientX - rect.left) * W / rect.width, y: (event.clientY - rect.top) * H / rect.height};
-      }
-
-      document.addEventListener('keydown', event => {
-        const key = event.key.toLowerCase();
-        const directions = {arrowup: [0,-1], w: [0,-1], arrowdown: [0,1], s: [0,1], arrowleft: [-1,0], a: [-1,0], arrowright: [1,0], d: [1,0]};
-        if (state.game === 'snake' && directions[key]) { event.preventDefault(); direction(...directions[key]); }
-        const s = state.data;
-        if (s && (state.game === 'pong' || state.game === 'breakout' || state.game === 'dodge')) {
-          if (['arrowup','w'].includes(key) && state.game === 'pong') { s.keys.up = true; event.preventDefault(); }
-          if (['arrowdown','s'].includes(key) && state.game === 'pong') { s.keys.down = true; event.preventDefault(); }
-          if (['arrowleft','a'].includes(key)) { s.keys.left = true; event.preventDefault(); }
-          if (['arrowright','d'].includes(key)) { s.keys.right = true; event.preventDefault(); }
-        }
-        if (event.code === 'Space') { event.preventDefault(); togglePause(); }
-      });
-      document.addEventListener('keyup', event => {
-        const s = state.data; if (!s || !s.keys) return;
-        const key = event.key.toLowerCase();
-        if (['arrowup','w'].includes(key)) s.keys.up = false;
-        if (['arrowdown','s'].includes(key)) s.keys.down = false;
-        if (['arrowleft','a'].includes(key)) s.keys.left = false;
-        if (['arrowright','d'].includes(key)) s.keys.right = false;
-      });
-      canvas.addEventListener('pointermove', event => {
-        if (!state.started || state.paused) return;
-        const p = point(event), s = state.data;
-        if (state.game === 'pong') s.playerY = clamp(p.y - 50, 20, H - 100);
-        if (state.game === 'breakout') s.paddleX = clamp(p.x - 45, 10, W - 100);
-        if (state.game === 'dodge') s.playerX = clamp(p.x, 18, W - 18);
-      });
-      canvas.addEventListener('pointerdown', event => {
-        if (!state.started || state.paused) return;
-        const p = point(event), s = state.data;
-        if (state.game === 'memory' && !s.mismatchAt) {
-          const size = 94, gap = 16, left = 40, top = 40;
-          s.cards.forEach((card, i) => {
-            const x = left + (i % 4) * (size + gap), y = top + Math.floor(i / 4) * (size + gap);
-            if (!card.matched && !s.flipped.includes(i) && p.x >= x && p.x <= x + size && p.y >= y && p.y <= y + size) {
-              s.flipped.push(i); draw();
-              if (s.flipped.length === 2) {
-                s.moves++;
-                const [a, b] = s.flipped;
-                if (s.cards[a].emoji === s.cards[b].emoji) {
-                  s.cards[a].matched = s.cards[b].matched = true; s.flipped = []; setScore(state.score + 25);
-                  statusEl.textContent = 'Match! Keep going.';
-                  if (s.cards.every(card => card.matched)) finish(`You matched every pair in ${s.moves} moves! Score: ${state.score}.`);
-                } else { s.mismatchAt = performance.now() + 750; statusEl.textContent = 'Not a match — try another pair.'; }
-              }
-            }
-          });
-        }
-        if (state.game === 'clicker') {
-          const t = s.target;
-          if (Math.hypot(p.x - t.x, p.y - t.y) <= t.r) {
-            s.hits++; setScore(s.hits); t.x = rand(48, W - 48); t.y = rand(90, H - 55); t.r = Math.max(17, 29 - s.hits * .35);
-          }
-        }
-      });
-      document.querySelectorAll('.mobile-controls button').forEach(button => button.addEventListener('pointerdown', event => {
-        event.preventDefault(); const dirs = {up: [0,-1], down: [0,1], left: [-1,0], right: [1,0]}; direction(...dirs[button.dataset.dir]);
-      }));
-      gameButtons.forEach(button => button.addEventListener('click', () => setGame(button.dataset.game)));
-      startBtn.addEventListener('click', startGame);
-      pauseBtn.addEventListener('click', togglePause);
-      setGame('snake');
-      requestAnimationFrame(now => { state.lastTime = now; requestAnimationFrame(frame); });
-    })();
-  </script>
+<main class="app">
+<header><h1>Browser <span>Arcade</span></h1><p>Play directly in this page—no game embeds or extra downloads.</p></header>
+<p class="label">Pick a game</p>
+<nav class="games" aria-label="Game selection">
+<button class="active" data-game="snake">🐍 Snake</button><button data-game="memory">🧠 Memory Match</button><button data-game="pong">🏓 Pong</button><button data-game="breakout">🧱 Breakout</button><button data-game="dodge">☄️ Meteor Dodge</button><button data-game="clicker">🎯 Target Rush</button><button data-game="maze">👻 Haunted Maze</button><button data-game="zombie">🧟 Zombie Survival</button><button data-game="space">🚀 Space Shooter</button><button data-game="platform">⚔️ Dungeon Runner</button>
+</nav>
+<section class="panel" aria-label="Game">
+<div class="hud"><div class="title">Now playing: <span id="gameName">Snake</span></div><div class="score">Score: <span id="score">0</span></div></div>
+<canvas id="board" width="640" height="480" aria-label="Game board"></canvas>
+<div class="touchpad" aria-label="Touch controls"><button data-key="up">▲</button><button data-key="left">◀</button><button data-key="down">▼</button><button data-key="right">▶</button></div>
+<div class="actions"><button class="control primary" id="start">Start game</button><button class="control" id="pause">Pause</button></div>
+<p class="status" id="status" aria-live="polite">Choose a game and press Start.</p><p class="help" id="help"></p>
+</section><footer>Original mini-games made with JavaScript and Canvas. If this page itself is blocked by a network, use it only where you have permission.</footer>
+</main>
+<script>
+(() => {
+'use strict';
+const canvas=document.getElementById('board'),ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+const $=id=>document.getElementById(id), scoreEl=$('score'),statusEl=$('status'),gameNameEl=$('gameName'),helpEl=$('help'),startBtn=$('start'),pauseBtn=$('pause');
+const buttons=[...document.querySelectorAll('[data-game]')], names={snake:'Snake',memory:'Memory Match',pong:'Pong',breakout:'Breakout',dodge:'Meteor Dodge',clicker:'Target Rush',maze:'Haunted Maze',zombie:'Zombie Survival',space:'Space Shooter',platform:'Dungeon Runner'};
+const instructions={snake:'Arrow keys / WASD or touch arrows. Eat food; avoid walls and yourself.',memory:'Click or tap cards to find all six matching pairs.',pong:'W/S or ↑/↓; drag on the board or use touch arrows. First to five wins.',breakout:'A/D or ←/→ to move the paddle. Keep the ball up and clear the bricks.',dodge:'A/D or ←/→ to dodge meteors. Collect green stars for bonus points.',clicker:'Tap/click the target quickly for 20 seconds.',maze:'Find three keys, then reach the exit. Arrow keys / WASD or touch controls. Avoid the ghost!',zombie:'Move with WASD/arrows. Aim with mouse/touch and click or press Space to shoot.',space:'Move with A/D or ←/→. Press Space or tap the board to fire.',platform:'A/D or ←/→ to move, Space/↑ to jump. Grab coins and reach the glowing exit.'};
+let game='snake',data=null,running=false,paused=false,score=0,last=0,keys={};
+const rand=(a,b)=>Math.random()*(b-a)+a,clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+function setScore(n){score=Math.floor(n);scoreEl.textContent=score}function finish(msg){running=false;paused=false;pauseBtn.textContent='Pause';statusEl.textContent=msg}
+const mazeRows=['###############','#.............#','#.###.###.###.#','#...#.....#...#','###.#.###.#.###','#...#...#.#...#','#.#####.#.###.#','#.....#.#.....#','#.###.#.#####.#','#...#...#.....#','###.#####.###.#','#.............#','#.###.###.###.#','#.............#','###############'];
+function fresh(g){
+ if(g==='snake')return{snake:[{x:9,y:7},{x:8,y:7},{x:7,y:7}],dir:{x:1,y:0},next:{x:1,y:0},food:{x:14,y:8},timer:0};
+ if(g==='memory'){let e=['🍒','🍋','🍉','🍇','🍊','🍓'];return{cards:[...e,...e].sort(()=>Math.random()-.5).map((emoji,i)=>({emoji,matched:false,id:i})),flipped:[],hideAt:0,moves:0}}
+ if(g==='pong')return{py:190,ay:190,b:{x:320,y:240,vx:260,vy:130},p:0,a:0};
+ if(g==='breakout'){let bricks=[];for(let r=0;r<5;r++)for(let c=0;c<10;c++)bricks.push({x:20+c*60,y:45+r*25,w:52,h:17,on:true,color:['#ff7185','#ff9f43','#ffd166','#45e0a1','#70a5ff'][r]});return{px:275,b:{x:320,y:360,vx:200,vy:-240},bricks,lives:3}}
+ if(g==='dodge')return{px:320,things:[],spawn:0,time:0};
+ if(g==='clicker')return{target:{x:320,y:230,r:28},time:20,hits:0};
+ if(g==='maze')return{map:mazeRows.map(r=>r.split('')),p:{x:1,y:1},ghost:{x:13,y:1},keys:[{x:1,y:13},{x:7,y:11},{x:13,y:13}],got:0,ghostTimer:0};
+ if(g==='zombie')return{player:{x:320,y:390,hp:3},zombies:[],bullets:[],spawn:0,fire:0,time:0,aim:{x:320,y:150}};
+ if(g==='space')return{player:{x:320,y:420},enemies:[],bullets:[],spawn:0,fire:0,time:0,lives:3};
+ return{player:{x:45,y:380,vx:0,vy:0},platforms:[{x:0,y:440,w:640,h:40},{x:130,y:365,w:110,h:16},{x:300,y:300,w:105,h:16},{x:470,y:230,w:120,h:16},{x:65,y:245,w:100,h:16}],coins:[{x:180,y:335},{x:350,y:270},{x:510,y:200},{x:100,y:215}],exit:{x:575,y:175,w:32,h:55},ground:false};
+}
+function select(g){game=g;running=false;paused=false;keys={};data=fresh(g);setScore(0);buttons.forEach(b=>b.classList.toggle('active',b.dataset.game===g));gameNameEl.textContent=names[g];helpEl.textContent=instructions[g];statusEl.textContent=`Ready to play ${names[g]}. Press Start game.`;startBtn.textContent='Start game';pauseBtn.textContent='Pause';draw()}
+function start(){data=fresh(game);setScore(0);running=true;paused=false;last=performance.now();keys={};startBtn.textContent='Restart';pauseBtn.textContent='Pause';statusEl.textContent=game==='maze'?'Find the keys. Something is following you.':game==='zombie'?'Survive the zombie swarm!':'Game on!';}
+function pause(){if(!running)return;paused=!paused;pauseBtn.textContent=paused?'Resume':'Pause';statusEl.textContent=paused?'Paused. Press Resume to continue.':'Game resumed.';last=performance.now()}
+function cellOpen(x,y){return data.map[y]&&data.map[y][x]!== '#'}
+function moveSnake(x,y){if(game!=='snake')return;let d=data.dir;if(x!==-d.x||y!==-d.y)data.next={x,y}}
+function update(dt){if(!running||paused)return;
+ if(game==='snake'){let s=data;s.timer+=dt;if(s.timer>=.12){s.timer=0;s.dir=s.next;let h={x:s.snake[0].x+s.dir.x,y:s.snake[0].y+s.dir.y},e=h.x===s.food.x&&h.y===s.food.y,body=e?s.snake:s.snake.slice(0,-1);if(h.x<0||h.x>=20||h.y<0||h.y>=15||body.some(p=>p.x===h.x&&p.y===h.y)){finish(`Game over! Score: ${score}.`);return}s.snake.unshift(h);if(e){setScore(score+10);do{s.food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*15)}}while(s.snake.some(p=>p.x===s.food.x&&p.y===s.food.y))}else s.snake.pop()}}
+ if(game==='memory'&&data.hideAt&&performance.now()>data.hideAt){data.flipped=[];data.hideAt=0}
+ if(game==='pong'){let s=data;if(keys.up)s.py-=330*dt;if(keys.down)s.py+=330*dt;s.py=clamp(s.py,0,380);s.ay=clamp(s.ay+(s.b.y-50-s.ay)*Math.min(1,dt*2.7),0,380);let b=s.b;b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.y<9||b.y>471)b.vy*=-1;if(b.vx<0&&b.x<38&&b.y>s.py&&b.y<s.py+100){b.vx=Math.abs(b.vx)*1.04;b.vy+=(b.y-s.py-50)*2;b.x=39}if(b.vx>0&&b.x>602&&b.y>s.ay&&b.y<s.ay+100){b.vx=-Math.abs(b.vx)*1.02;b.vy+=(b.y-s.ay-50)*1.5;b.x=601}if(b.x<0){s.a++;b.x=320;b.y=240;b.vx=240;b.vy=rand(-170,170)}if(b.x>640){s.p++;setScore(s.p);b.x=320;b.y=240;b.vx=-240;b.vy=rand(-170,170)}if(s.p>=5||s.a>=5)finish(s.p>=5?'You win!':'Computer wins. Press Restart to play again.')}
+ if(game==='breakout'){let s=data;if(keys.left)s.px-=380*dt;if(keys.right)s.px+=380*dt;s.px=clamp(s.px,0,550);let b=s.b;b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<8||b.x>632)b.vx*=-1;if(b.y<8)b.vy=Math.abs(b.vy);if(b.vy>0&&b.y>409&&b.y<440&&b.x>s.px&&b.x<s.px+90){b.vy=-Math.abs(b.vy);b.vx+=(b.x-s.px-45)*2;b.y=408}for(let br of s.bricks){if(br.on&&b.x>br.x&&b.x<br.x+br.w&&b.y>br.y&&b.y<br.y+br.h){br.on=false;b.vy*=-1;setScore(score+10);break}}if(s.bricks.every(b=>!b.on)){finish('You cleared all the bricks!');return}if(b.y>490){if(--s.lives<=0){finish(`Out of lives! Score: ${score}.`);return}b.x=320;b.y=360;b.vy=-230;b.vx=rand(-170,170)}}
+ if(game==='dodge'){let s=data;s.time+=dt;if(keys.left)s.px-=300*dt;if(keys.right)s.px+=300*dt;s.px=clamp(s.px,15,625);s.spawn-=dt;if(s.spawn<=0){let star=Math.random()<.2;s.things.push({x:rand(20,620),y:-15,r:star?10:17,v:rand(160,270)+s.time*2,star});s.spawn=Math.max(.22,.7-s.time*.008)}for(let i=s.things.length-1;i>=0;i--){let o=s.things[i];o.y+=o.v*dt;if(Math.hypot(o.x-s.px,o.y-420)<o.r+14){if(o.star){setScore(score+25);s.things.splice(i,1)}else{finish(`Meteor hit! Score: ${score}.`);return}}if(o.y>500)s.things.splice(i,1)}setScore(Math.floor(s.time*2));if(s.time>=30)finish(`You survived! Score: ${score}.`)}
+ if(game==='clicker'){data.time-=dt;if(data.time<=0)finish(`Time's up! You hit the target ${data.hits} times.`)}
+ if(game==='maze'){let s=data;s.ghostTimer+=dt;if(s.ghostTimer>.55){s.ghostTimer=0;let options=[[1,0],[-1,0],[0,1],[0,-1]].map(([x,y])=>({x:s.ghost.x+x,y:s.ghost.y+y})).filter(p=>cellOpen(p.x,p.y));options.sort((a,b)=>Math.abs(a.x-s.p.x)+Math.abs(a.y-s.p.y)-Math.abs(b.x-s.p.x)-Math.abs(b.y-s.p.y));if(options[0])s.ghost=options[0]}if(s.ghost.x===s.p.x&&s.ghost.y===s.p.y){finish('The ghost caught you! Press Restart to escape again.');return}if(s.got===3&&s.p.x===13&&s.p.y===13)finish(`You escaped the maze! Score: ${score}.`)}
+ if(game==='zombie'){let s=data,p=s.player;s.time+=dt;if(keys.left)p.x-=190*dt;if(keys.right)p.x+=190*dt;if(keys.up)p.y-=190*dt;if(keys.down)p.y+=190*dt;p.x=clamp(p.x,15,625);p.y=clamp(p.y,15,465);s.spawn-=dt;s.fire-=dt;if(s.spawn<=0){s.zombies.push({x:Math.random()<.5?-10:650,y:rand(30,450),hp:2,speed:rand(38,60)+s.time});s.spawn=.95}for(let z of s.zombies){let dx=p.x-z.x,dy=p.y-z.y,d=Math.hypot(dx,dy)||1;z.x+=dx/d*z.speed*dt;z.y+=dy/d*z.speed*dt;if(d<24){z.x-=dx/d*60*dt;z.y-=dy/d*60*dt;if(!z.lastHit||performance.now()-z.lastHit>900){p.hp--;z.lastHit=performance.now();if(p.hp<=0){finish(`Overrun! Score: ${score}.`);return}}}}for(let i=s.bullets.length-1;i>=0;i--){let b=s.bullets[i];b.x+=b.vx*dt;b.y+=b.vy*dt;let hit=s.zombies.findIndex(z=>Math.hypot(z.x-b.x,z.y-b.y)<19);if(hit>=0){s.zombies[hit].hp--;s.bullets.splice(i,1);if(s.zombies[hit].hp<=0){s.zombies.splice(hit,1);setScore(score+10)}}else if(b.x<0||b.x>640||b.y<0||b.y>480)s.bullets.splice(i,1)}setScore(Math.max(score,Math.floor(s.time*2)))}
+ if(game==='space'){let s=data,p=s.player;s.time+=dt;if(keys.left)p.x-=300*dt;if(keys.right)p.x+=300*dt;p.x=clamp(p.x,18,622);s.fire-=dt;s.spawn-=dt;if(s.fire<=0&&keys.fire){s.bullets.push({x:p.x,y:p.y-18});s.fire=.18}if(s.spawn<=0){s.enemies.push({x:rand(20,620),y:-15,v:rand(70,140)});s.spawn=.65}for(let b of s.bullets)b.y-=440*dt;for(let e of s.enemies)e.y+=e.v*dt;for(let i=s.enemies.length-1;i>=0;i--){let e=s.enemies[i],bi=s.bullets.findIndex(b=>Math.hypot(b.x-e.x,b.y-e.y)<18);if(bi>=0){s.enemies.splice(i,1);s.bullets.splice(bi,1);setScore(score+10)}else if(e.y>500){s.enemies.splice(i,1);s.lives--;if(s.lives<=0){finish(`Ship destroyed! Score: ${score}.`);return}}}if(s.enemies.some(e=>Math.hypot(e.x-p.x,e.y-p.y)<23)){finish(`You were hit! Score: ${score}.`);return}}
+ if(game==='platform'){let s=data,p=s.player;p.vx=(keys.left?-190:0)+(keys.right?190:0);p.x+=p.vx*dt;p.x=clamp(p.x,0,620);p.vy+=850*dt;let oldY=p.y;p.y+=p.vy*dt;s.ground=false;for(let q of s.platforms){if(p.vy>=0&&oldY+24<=q.y&&p.y+24>=q.y&&p.x+20>q.x&&p.x<q.x+q.w){p.y=q.y-24;p.vy=0;s.ground=true}}for(let i=s.coins.length-1;i>=0;i--)if(Math.hypot(p.x+10-s.coins[i].x,p.y+10-s.coins[i].y)<22){s.coins.splice(i,1);setScore(score+25)}if(p.y>510){finish(`Fell into the dungeon! Score: ${score}.`);return}if(p.x+20>s.exit.x&&p.x<s.exit.x+s.exit.w&&p.y+24>s.exit.y)finish(`Dungeon cleared! Final score: ${score}.`)}
+}
+function bg(){ctx.fillStyle='#080e1a';ctx.fillRect(0,0,W,H)}
+function circle(x,y,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
+function draw(){if(!data)return;bg();ctx.textAlign='left';ctx.textBaseline='alphabetic';
+ if(game==='snake'){let z=32;ctx.strokeStyle='#18243a';for(let x=0;x<=20;x++){ctx.beginPath();ctx.moveTo(x*z,0);ctx.lineTo(x*z,H);ctx.stroke()}for(let y=0;y<=15;y++){ctx.beginPath();ctx.moveTo(0,y*z);ctx.lineTo(W,y*z);ctx.stroke()}circle((data.food.x+.5)*z,(data.food.y+.5)*z,11,'#ff7185');data.snake.forEach((p,i)=>{ctx.fillStyle=i?'#10b981':'#a7f3d0';ctx.beginPath();ctx.roundRect(p.x*z+2,p.y*z+2,28,28,6);ctx.fill()})}
+ if(game==='memory'){let size=94,gap=15,left=34,top=32;data.cards.forEach((c,i)=>{let x=left+(i%6)*(size+gap),y=top+Math.floor(i/6)*(size+gap),face=c.matched||data.flipped.includes(i);ctx.fillStyle=c.matched?'#164638':face?'#202b43':'#142039';ctx.strokeStyle=c.matched?'#45e0a1':'#40516f';ctx.beginPath();ctx.roundRect(x,y,size,size,11);ctx.fill();ctx.stroke();ctx.fillStyle='white';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='40px system-ui';ctx.fillText(face?c.emoji:'?',x+size/2,y+size/2)})}
+ if(game==='pong'){ctx.setLineDash([9,12]);ctx.strokeStyle='#35435d';ctx.beginPath();ctx.moveTo(320,0);ctx.lineTo(320,480);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#70a5ff';ctx.fillRect(18,data.py,12,100);ctx.fillStyle='#ff7185';ctx.fillRect(610,data.ay,12,100);circle(data.b.x,data.b.y,10,'white');ctx.textAlign='center';ctx.fillStyle='white';ctx.font='bold 34px system-ui';ctx.fillText(`${data.p}     ${data.a}`,320,42)}
+ if(game==='breakout'){data.bricks.forEach(b=>{if(b.on){ctx.fillStyle=b.color;ctx.beginPath();ctx.roundRect(b.x,b.y,b.w,b.h,4);ctx.fill()}});ctx.fillStyle='#70a5ff';ctx.beginPath();ctx.roundRect(data.px,420,90,13,7);ctx.fill();circle(data.b.x,data.b.y,9,'white');ctx.fillStyle='#aab6ce';ctx.font='16px system-ui';ctx.fillText(`Lives: ${data.lives}`,12,466)}
+ if(game==='dodge'){ctx.fillStyle='#70a5ff';ctx.beginPath();ctx.moveTo(data.px,397);ctx.lineTo(data.px-18,440);ctx.lineTo(data.px+18,440);ctx.fill();data.things.forEach(o=>circle(o.x,o.y,o.r,o.star?'#45e0a1':'#ff806b'));ctx.fillStyle='#aab6ce';ctx.font='16px system-ui';ctx.fillText(`Survive: ${Math.max(0,30-data.time).toFixed(1)}s`,12,25)}
+ if(game==='clicker'){ctx.fillStyle='#aab6ce';ctx.font='bold 25px system-ui';ctx.textAlign='center';ctx.fillText(`Time: ${data.time.toFixed(1)}s`,320,42);circle(data.target.x,data.target.y,data.target.r,'#45e0a1');circle(data.target.x,data.target.y,data.target.r*.55,'#c9ffe8');circle(data.target.x,data.target.y,data.target.r*.22,'#45e0a1');ctx.font='16px system-ui';ctx.fillText(`Hits: ${data.hits}`,320,462)}
+ if(game==='maze'){let size=32;data.map.forEach((row,y)=>row.forEach((c,x)=>{ctx.fillStyle=c==='#'?'#29354c':'#101a2d';ctx.fillRect(x*size,y*size,size-1,size-1)}));data.keys.forEach(k=>circle((k.x+.5)*size,(k.y+.5)*size,7,'#ffd166'));ctx.fillStyle=data.got===3?'#45e0a1':'#67758f';ctx.fillRect(13*size+7,13*size+7,18,18);circle((data.p.x+.5)*size,(data.p.y+.5)*size,11,'#70a5ff');circle((data.ghost.x+.5)*size,(data.ghost.y+.5)*size,11,'#ff7185');ctx.fillStyle='white';ctx.font='15px system-ui';ctx.fillText(`Keys: ${data.got}/3`,12,470)}
+ if(game==='zombie'){let s=data;ctx.strokeStyle='#1d2940';for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}s.bullets.forEach(b=>circle(b.x,b.y,4,'#ffd166'));s.zombies.forEach(z=>{circle(z.x,z.y,14,'#80b85a');circle(z.x-5,z.y-3,2,'#172318');circle(z.x+5,z.y-3,2,'#172318')});circle(s.player.x,s.player.y,13,'#70a5ff');ctx.fillStyle='#ff7185';ctx.font='16px system-ui';ctx.fillText(`Health: ${'♥'.repeat(s.player.hp)}`,12,25)}
+ if(game==='space'){let s=data;ctx.fillStyle='#dce6ff';for(let i=0;i<35;i++)ctx.fillRect((i*97)%W,(i*71)%H,2,2);s.bullets.forEach(b=>ctx.fillStyle='#ffd166',ctx.fillRect(b.x-2,b.y-8,4,12));s.enemies.forEach(e=>{ctx.fillStyle='#ff7185';ctx.beginPath();ctx.moveTo(e.x,e.y-13);ctx.lineTo(e.x+13,e.y+12);ctx.lineTo(e.x-13,e.y+12);ctx.fill()});ctx.fillStyle='#70a5ff';ctx.beginPath();ctx.moveTo(s.player.x,s.player.y-17);ctx.lineTo(s.player.x-15,s.player.y+15);ctx.lineTo(s.player.x+15,s.player.y+15);ctx.fill();ctx.fillStyle='#aab6ce';ctx.font='16px system-ui';ctx.fillText(`Lives: ${s.lives}`,12,25)}
+ if(game==='platform'){data.platforms.forEach(p=>{ctx.fillStyle='#62734e';ctx.fillRect(p.x,p.y,p.w,p.h);ctx.fillStyle='#374b3b';ctx.fillRect(p.x,p.y+7,p.w,p.h-7)});data.coins.forEach(c=>circle(c.x,c.y,8,'#ffd166'));ctx.fillStyle='#45e0a1';ctx.fillRect(data.exit.x,data.exit.y,data.exit.w,data.exit.h);ctx.fillStyle='#70a5ff';ctx.beginPath();ctx.roundRect(data.player.x,data.player.y,20,24,5);ctx.fill();ctx.fillStyle='white';ctx.font='16px system-ui';ctx.fillText('EXIT',data.exit.x-4,data.exit.y-8)}
+}
+function frame(now){let dt=Math.min((now-last)/1000||0,.05);last=now;update(dt);draw();requestAnimationFrame(frame)}
+function canvasPoint(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+function shootAt(x,y){let s=data,p=s.player,dx=x-p.x,dy=y-p.y,d=Math.hypot(dx,dy)||1;s.bullets.push({x:p.x,y:p.y,vx:dx/d*390,vy:dy/d*390})}
+document.addEventListener('keydown',e=>{let k=e.key.toLowerCase(),dirs={arrowup:[0,-1],w:[0,-1],arrowdown:[0,1],s:[0,1],arrowleft:[-1,0],a:[-1,0],arrowright:[1,0],d:[1,0]};if(game==='snake'&&dirs[k]){e.preventDefault();moveSnake(...dirs[k])}if(['arrowup','w'].includes(k))keys.up=true;if(['arrowdown','s'].includes(k))keys.down=true;if(['arrowleft','a'].includes(k))keys.left=true;if(['arrowright','d'].includes(k))keys.right=true;if(k===' '){e.preventDefault();if(game==='zombie'&&running){let a=data.aim;shootAt(a.x,a.y)}else if(game==='space')data.fire=-1,keys.fire=true;else if(game==='platform'&&data.ground)data.player.vy=-390;else pause()}if(game==='maze'&&dirs[k]){e.preventDefault();let [dx,dy]=dirs[k],p=data.p,nx=p.x+dx,ny=p.y+dy;if(cellOpen(nx,ny)){p.x=nx;p.y=ny;let i=data.keys.findIndex(q=>q.x===nx&&q.y===ny);if(i>=0){data.keys.splice(i,1);data.got++;setScore(score+50)}if(nx===13&&ny===13&&data.got<3)statusEl.textContent='The exit is locked—find all three keys!'}}});
+document.addEventListener('keyup',e=>{let k=e.key.toLowerCase();if(['arrowup','w'].includes(k))keys.up=false;if(['arrowdown','s'].includes(k))keys.down=false;if(['arrowleft','a'].includes(k))keys.left=false;if(['arrowright','d'].includes(k))keys.right=false;if(k===' ')keys.fire=false});
+canvas.addEventListener('pointermove',e=>{let p=canvasPoint(e);if(game==='pong'&&running)data.py=clamp(p.y-50,0,380);if(game==='breakout'&&running)data.px=clamp(p.x-45,0,550);if(game==='zombie')data.aim=p});
+canvas.addEventListener('pointerdown',e=>{let p=canvasPoint(e);if(game==='memory'&&running&&!data.hideAt){let size=94,gap=15,left=34,top=32;data.cards.forEach((c,i)=>{let x=left+(i%6)*(size+gap),y=top+Math.floor(i/6)*(size+gap);if(!c.matched&&!data.flipped.includes(i)&&p.x>=x&&p.x<x+size&&p.y>=y&&p.y<y+size){data.flipped.push(i);if(data.flipped.length===2){data.moves++;let[a,b]=data.flipped;if(data.cards[a].emoji===data.cards[b].emoji){data.cards[a].matched=data.cards[b].matched=true;data.flipped=[];setScore(score+25);if(data.cards.every(c=>c.matched))finish(`All pairs found in ${data.moves} moves!`)}else data.hideAt=performance.now()+700}}})}if(game==='clicker'&&running&&Math.hypot(p.x-data.target.x,p.y-data.target.y)<data.target.r){data.hits++;setScore(data.hits);data.target={x:rand(45,595),y:rand(75,410),r:Math.max(16,28-data.hits*.35)}}if(game==='zombie'&&running)shootAt(p.x,p.y);if(game==='space'&&running)keys.fire=true});canvas.addEventListener('pointerup',()=>{keys.fire=false});canvas.addEventListener('pointerleave',()=>{keys.fire=false});
+document.querySelectorAll('.touchpad button').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();let k=b.dataset.key,d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};if(game==='snake')moveSnake(...d[k]);else if(game==='maze'){let[dx,dy]=d[k],x=data.p.x+dx,y=data.p.y+dy;if(cellOpen(x,y)){data.p={x,y};let i=data.keys.findIndex(q=>q.x===x&&q.y===y);if(i>=0){data.keys.splice(i,1);data.got++;setScore(score+50)}}}else keys[k]=true}));document.querySelectorAll('.touchpad button').forEach(b=>b.addEventListener('pointerup',()=>{keys[b.dataset.key]=false}));
+buttons.forEach(b=>b.addEventListener('click',()=>select(b.dataset.game)));startBtn.addEventListener('click',start);pauseBtn.addEventListener('click',pause);select('snake');last=performance.now();requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
